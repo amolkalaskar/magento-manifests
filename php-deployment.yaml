@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: magento-demo-deployment
+  namespace: magento-demo 
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: magento-demo-app
+  template:
+    metadata:
+      labels:
+        app: magento-demo-app
+    spec:
+      containers:
+      - name:  magento-demo-app         #Change here
+        image: amolkemtec/ity-php:new        #Change here
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: magento-pv        #Change here
+          mountPath: /var/www/html
+        ports:
+        - name: magentoappport                #Change here
+          containerPort: 9000
+        readinessProbe:
+          tcpSocket:
+            port: 9000
+          initialDelaySeconds: 60
+          periodSeconds: 3
+      terminationGracePeriodSeconds: 60
+      restartPolicy: Always
+      volumes:
+        - name: magento-pv
+          persistentVolumeClaim:
+            claimName: magento-claim
+            readOnly: false

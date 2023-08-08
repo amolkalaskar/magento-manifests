@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: magento-els-deployment
+  namespace: magento-demo
+  labels:
+    app: magento-els
+spec:
+  selector:
+    matchLabels:
+      app: magento-els
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: magento-els
+    spec:
+      containers:
+      - name: magento-els
+        image: amolkemtec/elasticsearch:newels23 #docker.elastic.co/elasticsearch/elasticsearch:8.6.2 #elasticsearch:7.17.9
+        env:
+          - name: elasticsearch-host
+            value: elasticsearch
+          - name: elasticsearch-port
+            value: "9200"
+          # - name: ES_JAVA_OPTS
+          #   value: -Xms1024m -Xmx1024m
+          # - name: bootstrap.memory_lock
+          #   value: "true"
+        resources:
+          requests:
+             memory: 2Gi
+          limits:
+             memory: 2Gi
+        ports:
+        - containerPort: 9200

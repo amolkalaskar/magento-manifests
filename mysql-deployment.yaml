@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  namespace: magento-demo
+  labels:
+    app: magento-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magento-mysql
+  template:
+    metadata:
+      labels:
+        app: magento-mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8-debian
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: magento
+          - name: MYSQL_HOST
+            value: db
+          - name: MYSQL_DATABASE
+            value: magento
+          - name: MYSQL_USER
+            value: magento
+          - name: MYSQL_PASSWORD
+            value: magento
+        ports:
+        - containerPort: 3306

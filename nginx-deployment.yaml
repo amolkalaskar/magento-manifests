@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app
+  namespace: magento-demo
+spec:
+  selector:
+    matchLabels:
+      run: nginx-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: nginx-app
+    spec:
+      containers:
+      - name: nginx-app
+        image: nginx:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: magento-pv
+          mountPath: /var/www/html
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d  
+      volumes:
+        - name: magento-pv
+          persistentVolumeClaim:
+            claimName: magento-claim
+        - name: nginx-config
+          configMap:
+            name: nginx-config-default
+            items:
+              - key: default.conf
+                path: default.conf
+
+ 

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config-default
+  namespace: magento-demo
+  labels:
+    tier: backend
+data:
+  default.conf: |
+    upstream fastcgi_backend {
+        server  magentodemoapp-service:9000;
+    }
+
+    server {
+        listen 80;
+        server_name _;
+        set $MAGE_ROOT /var/www/html;
+        set $MAGE_DEBUG_SHOW_ARGS 1;
+        include /var/www/html/nginx.conf.sample;
+    }

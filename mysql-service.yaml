@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: magento-demo
+spec:
+  selector:
+    app: magento-mysql
+  ports:
+  - port: 3306
